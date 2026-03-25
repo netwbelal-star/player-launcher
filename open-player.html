@@ -51,7 +51,9 @@
   <div class="box">
     <h2>جاري فتح المشغل</h2>
     <p>إذا لم يتم فتح الفيديو تلقائيًا، يرجى تنزيل المشغل الخاص بالتطبيق.</p>
-    <a id="installBtn" href="https://play.google.com/store/apps/details?id=com.net.playergo">
+
+    <!-- الزر مخفي في البداية -->
+    <a id="installBtn" style="display:none;" href="https://play.google.com/store/apps/details?id=com.net.playergo">
       تنزيل المشغل
     </a>
   </div>
@@ -63,11 +65,13 @@
     if (data) {
       const appUrl = "xmtv://" + data;
 
-      setTimeout(function () {
-        window.location.href = "https://play.google.com/store/apps/details?id=com.net.playergo";
-      }, 1500);
-
+      // نحاول نفتح المشغل
       window.location.href = appUrl;
+
+      // لو ما اشتغلش → نظهر زر التحميل فقط (بدون تحويل تلقائي)
+      setTimeout(function () {
+        document.getElementById("installBtn").style.display = "inline-block";
+      }, 2000);
     }
   </script>
 </body>
