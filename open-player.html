@@ -5,73 +5,141 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>فتح المشغل</title>
   <style>
+    *{
+      box-sizing:border-box;
+    }
+
     body{
       margin:0;
+      min-height:100vh;
       background:#111;
       color:#fff;
       font-family:Arial,sans-serif;
       display:flex;
       align-items:center;
       justify-content:center;
-      min-height:100vh;
       text-align:center;
       padding:20px;
     }
+
     .box{
       width:100%;
-      max-width:420px;
+      max-width:430px;
       background:#1c1c1c;
-      border-radius:16px;
-      padding:24px;
-      box-sizing:border-box;
+      border-radius:18px;
+      padding:26px 20px;
+      box-shadow:0 10px 30px rgba(0,0,0,.35);
+      display:none;
     }
+
     h2{
-      margin:0 0 12px;
-      font-size:26px;
+      margin:0 0 14px;
+      font-size:28px;
+      line-height:1.5;
     }
+
     p{
-      margin:0 0 20px;
+      margin:0 0 22px;
       font-size:18px;
-      line-height:1.8;
+      line-height:1.9;
       color:#ddd;
     }
-    a{
+
+    .buttons{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      align-items:center;
+    }
+
+    .direct-btn{
       display:inline-block;
+      width:100%;
+      text-decoration:none;
       background:#e50914;
       color:#fff;
-      text-decoration:none;
-      padding:14px 22px;
-      border-radius:10px;
-      font-size:18px;
+      padding:15px 18px;
+      border-radius:12px;
+      font-size:19px;
       font-weight:bold;
+    }
+
+    .play-btn{
+      display:inline-block;
+      text-decoration:none;
+    }
+
+    .play-btn img{
+      display:block;
+      width:260px;
+      max-width:100%;
+      height:auto;
+      border-radius:10px;
+    }
+
+    .loading{
+      font-size:24px;
+      font-weight:bold;
+      line-height:1.8;
     }
   </style>
 </head>
 <body>
-  <div class="box">
-    <h2>جاري فتح المشغل</h2>
-    <p>إذا لم يتم فتح الفيديو تلقائيًا، يرجى تنزيل المشغل الخاص بالتطبيق.</p>
+  <div id="loadingText" class="loading">جاري فتح المشغل...</div>
 
-    <!-- الزر مخفي في البداية -->
-    <a id="installBtn" style="display:none;" href="https://play.google.com/store/apps/details?id=com.net.playergo">
-      تنزيل المشغل
-    </a>
+  <div id="fallbackBox" class="box">
+    <h2>المشغل غير مثبت</h2>
+    <p>
+      حتى تتمكن من التشغيل والمشاهدة يجب عليك تحميل المشغل الخاص بالتطبيق.
+    </p>
+
+    <div class="buttons">
+      <a
+        class="direct-btn"
+        href="https://your-direct-download-link.com/player.apk">
+        تحميل مباشر
+      </a>
+
+      <a
+        class="play-btn"
+        href="https://play.google.com/store/apps/details?id=com.net.playergo">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+          alt="Get it on Google Play">
+      </a>
+    </div>
   </div>
 
   <script>
     const params = new URLSearchParams(window.location.search);
     const data = params.get("data");
 
+    const loadingText = document.getElementById("loadingText");
+    const fallbackBox = document.getElementById("fallbackBox");
+
+    let appOpened = false;
+
+    function showFallback() {
+      if (!appOpened) {
+        loadingText.style.display = "none";
+        fallbackBox.style.display = "block";
+      }
+    }
+
     if (data) {
       const appUrl = "xmtv://" + data;
 
-      // نحاول نفتح المشغل
+      document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+          appOpened = true;
+        }
+      });
+
       window.location.href = appUrl;
 
-      // لو ما اشتغلش → نظهر زر التحميل فقط (بدون تحويل تلقائي)
-      setTimeout(function () {
-        document.getElementById("installBtn").style.display = "inline-block";
-      }, 2000);
+      setTimeout(showFallback, 1800);
+    } else {
+      showFallback();
     }
   </script>
 </body>
