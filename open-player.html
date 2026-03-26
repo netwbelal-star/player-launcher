@@ -133,6 +133,7 @@
       color: #bbb;
       text-decoration: underline;
       font-size: 14px;
+      cursor: pointer;
     }
 
     @keyframes spin {
@@ -174,10 +175,11 @@
 
     let appOpened = false;
     let fallbackTimer = null;
+    let secondTryTimer = null;
 
     function getPayload() {
       const params = new URLSearchParams(window.location.search);
-      return (params.get("data") || "").trim();
+      return (params.get("data") || "").replace(/\s+/g, "").trim();
     }
 
     function showInstallScreen() {
@@ -185,6 +187,16 @@
       loaderWrap.style.display = "none";
       installWrap.style.display = "block";
       document.title = "تنزيل المشغل";
+    }
+
+    function clearAllTimers() {
+      clearTimeout(fallbackTimer);
+      clearTimeout(secondTryTimer);
+    }
+
+    function markAppOpened() {
+      appOpened = true;
+      clearAllTimers();
     }
 
     function tryOpenPlayer() {
@@ -195,37 +207,46 @@
         return;
       }
 
-      const deepLink = "xmtv://" + payload;
+      appOpened = false;
+      loaderWrap.style.display = "block";
+      installWrap.style.display = "none";
+      document.title = "تشغيل الفيلم";
+
+      const playStoreUrl = "https://play.google.com/store/apps/details?id=com.net.playergo";
+
+      const intentLink =
+        "intent://" + payload +
+        "#Intent;scheme=xmtv;package=com.net.playergo;" +
+        "S.browser_fallback_url=" + encodeURIComponent(playStoreUrl) + ";" +
+        "end";
+
+      const customSchemeLink = "xmtv://" + payload;
 
       fallbackTimer = setTimeout(() => {
         showInstallScreen();
-      }, 1800);
+      }, 2200);
 
-      window.location.href = deepLink;
+      secondTryTimer = setTimeout(() => {
+        if (!appOpened) {
+          window.location.href = customSchemeLink;
+        }
+      }, 700);
+
+      window.location.href = intentLink;
     }
 
-    window.addEventListener("blur", () => {
-      appOpened = true;
-      clearTimeout(fallbackTimer);
-    });
+    window.addEventListener("blur", markAppOpened);
 
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
-        appOpened = true;
-        clearTimeout(fallbackTimer);
+        markAppOpened();
       }
     });
 
-    window.addEventListener("pagehide", () => {
-      appOpened = true;
-      clearTimeout(fallbackTimer);
-    });
+    window.addEventListener("pagehide", markAppOpened);
 
     retryBtn.addEventListener("click", function(e) {
       e.preventDefault();
-      loaderWrap.style.display = "block";
-      installWrap.style.display = "none";
-      appOpened = false;
       tryOpenPlayer();
     });
 
