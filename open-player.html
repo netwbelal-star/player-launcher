@@ -3,82 +3,235 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>تنزيل المشغل</title>
+  <title>تشغيل الفيلم</title>
+  <meta name="theme-color" content="#000000" />
   <style>
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      min-height:100vh;
-      background:#111;
-      color:#fff;
-      font-family:Arial,sans-serif;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      padding:20px;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-    .box{
-      width:100%;
-      max-width:430px;
-      background:#1c1c1c;
-      border-radius:18px;
-      padding:26px 20px;
-      box-shadow:0 10px 30px rgba(0,0,0,.35);
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top, rgba(229,9,20,0.18), transparent 35%),
+        linear-gradient(180deg, #000 0%, #111 100%);
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      overflow: hidden;
     }
-    h2{
-      margin:0 0 14px;
-      font-size:28px;
-      line-height:1.5;
+
+    .box {
+      width: 100%;
+      max-width: 430px;
+      background: rgba(28,28,28,0.95);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 22px;
+      padding: 28px 22px;
+      box-shadow: 0 15px 45px rgba(0,0,0,.45);
+      backdrop-filter: blur(8px);
     }
-    p{
-      margin:0 0 22px;
-      font-size:18px;
-      line-height:1.9;
-      color:#ddd;
+
+    .logo {
+      width: 74px;
+      height: 74px;
+      margin: 0 auto 18px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7a0000, #e50914);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      box-shadow: 0 0 25px rgba(229,9,20,.35);
     }
-    .buttons{
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-      align-items:center;
+
+    h1 {
+      font-size: 27px;
+      margin-bottom: 10px;
+      line-height: 1.5;
     }
-    .direct-btn{
-      display:inline-block;
-      width:100%;
-      text-decoration:none;
-      background:#e50914;
-      color:#fff;
-      padding:15px 18px;
-      border-radius:12px;
-      font-size:19px;
-      font-weight:bold;
+
+    p {
+      font-size: 17px;
+      line-height: 1.9;
+      color: #ddd;
+      margin-bottom: 18px;
     }
-    .play-btn{
-      display:inline-block;
-      text-decoration:none;
+
+    .loader-wrap {
+      display: block;
     }
-    .play-btn img{
-      display:block;
-      width:260px;
-      max-width:100%;
-      height:auto;
-      border-radius:10px;
+
+    .install-wrap {
+      display: none;
+    }
+
+    .spinner {
+      width: 62px;
+      height: 62px;
+      margin: 18px auto 18px;
+      border-radius: 50%;
+      border: 4px solid rgba(255,255,255,0.15);
+      border-top-color: #e50914;
+      animation: spin 0.9s linear infinite;
+    }
+
+    .hint {
+      font-size: 15px;
+      color: #aaa;
+      margin-top: 8px;
+      line-height: 1.8;
+    }
+
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: center;
+      margin-top: 18px;
+    }
+
+    .direct-btn {
+      display: inline-block;
+      width: 100%;
+      text-decoration: none;
+      background: linear-gradient(180deg, #ff1f2d, #c40010);
+      color: #fff;
+      padding: 15px 18px;
+      border-radius: 14px;
+      font-size: 18px;
+      font-weight: bold;
+      box-shadow: 0 10px 24px rgba(229,9,20,.22);
+    }
+
+    .direct-btn:hover {
+      opacity: 0.95;
+    }
+
+    .play-btn {
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    .play-btn img {
+      display: block;
+      width: 260px;
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+    }
+
+    .small-link {
+      display: inline-block;
+      margin-top: 14px;
+      color: #bbb;
+      text-decoration: underline;
+      font-size: 14px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
   <div class="box">
-    <h2>المشغل غير مثبت</h2>
-    <p>حتى تتمكن من التشغيل والمشاهدة يجب عليك تحميل المشغل الخاص بالتطبيق.</p>
+    <div id="loaderWrap" class="loader-wrap">
+      <div class="logo">▶</div>
+      <h1>جاري فتح المشغل</h1>
+      <p>يرجى الانتظار قليلاً، يتم الآن محاولة تشغيل الفيلم داخل المشغل الخاص بالتطبيق.</p>
+      <div class="spinner"></div>
+      <div class="hint">إذا لم يتم فتح المشغل تلقائيًا، ستظهر لك خيارات التحميل بعد لحظات.</div>
+    </div>
 
-    <div class="buttons">
-      <a class="direct-btn" href="https://YOUR-DIRECT-APK-LINK.apk">تحميل مباشر</a>
+    <div id="installWrap" class="install-wrap">
+      <div class="logo">⬇</div>
+      <h1>المشغل غير مثبت</h1>
+      <p>حتى تتمكن من تشغيل الفيلم أو الفيديو، يجب عليك تحميل المشغل الخاص بالتطبيق أولاً.</p>
 
-      <a class="play-btn" href="https://play.google.com/store/apps/details?id=com.net.playergo">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Get it on Google Play">
-      </a>
+      <div class="buttons">
+        <a id="directBtn" class="direct-btn" href="https://YOUR-DIRECT-APK-LINK.apk">تحميل مباشر</a>
+
+        <a class="play-btn" href="https://play.google.com/store/apps/details?id=com.net.playergo">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Get it on Google Play">
+        </a>
+      </div>
+
+      <a id="retryBtn" class="small-link" href="#">إعادة محاولة فتح المشغل</a>
     </div>
   </div>
+
+  <script>
+    const loaderWrap = document.getElementById("loaderWrap");
+    const installWrap = document.getElementById("installWrap");
+    const retryBtn = document.getElementById("retryBtn");
+
+    let appOpened = false;
+    let fallbackTimer = null;
+
+    function getPayload() {
+      const params = new URLSearchParams(window.location.search);
+      return (params.get("data") || "").trim();
+    }
+
+    function showInstallScreen() {
+      if (appOpened) return;
+      loaderWrap.style.display = "none";
+      installWrap.style.display = "block";
+      document.title = "تنزيل المشغل";
+    }
+
+    function tryOpenPlayer() {
+      const payload = getPayload();
+
+      if (!payload) {
+        showInstallScreen();
+        return;
+      }
+
+      const deepLink = "xmtv://" + payload;
+
+      fallbackTimer = setTimeout(() => {
+        showInstallScreen();
+      }, 1800);
+
+      window.location.href = deepLink;
+    }
+
+    window.addEventListener("blur", () => {
+      appOpened = true;
+      clearTimeout(fallbackTimer);
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        appOpened = true;
+        clearTimeout(fallbackTimer);
+      }
+    });
+
+    window.addEventListener("pagehide", () => {
+      appOpened = true;
+      clearTimeout(fallbackTimer);
+    });
+
+    retryBtn.addEventListener("click", function(e) {
+      e.preventDefault();
+      loaderWrap.style.display = "block";
+      installWrap.style.display = "none";
+      appOpened = false;
+      tryOpenPlayer();
+    });
+
+    window.addEventListener("load", () => {
+      tryOpenPlayer();
+    });
+  </script>
 </body>
 </html>
